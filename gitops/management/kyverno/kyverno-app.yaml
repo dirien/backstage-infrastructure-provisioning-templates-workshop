@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: kyerno
+  name: kyverno
   namespace: argocd
 spec:
   destination:
