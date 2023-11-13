@@ -43,7 +43,7 @@ spec:
     targetRevision: main
     directory:
       recurse: true
-    repoURL: https://github.com/joaquinrz/flamingo-lab.git
+    repoURL: https://github.com/my-backstage-demo/backstage-infrastructure-provisioning-templates-workshop.git
   syncPolicy:
     automated:
       prune: true
