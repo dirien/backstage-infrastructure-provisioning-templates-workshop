@@ -4,4 +4,4 @@ backstage:
     repository: backstage
     pullPolicy: Always
   extraEnvVarsSecrets:
-  - name: global-secret
+  - global-secret
