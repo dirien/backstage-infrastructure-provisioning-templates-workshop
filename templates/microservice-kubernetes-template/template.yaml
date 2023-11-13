@@ -1,0 +1,144 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: microservice-kubernetes-template
+  title: Microservice on Kubernetes
+  description: |
+    A template for creating a new Microservice on Kubernetes.
+    This template will create following components:
+    - GitHub repository for the microservice
+    - GitHub actions to build the microservice
+    - ApplicationSet in ArgoCD to deploy the service to multiple clusters
+  tags:
+  - pulumi
+  - microservice
+  - kubernetes
+  - github
+  - argocd
+spec:
+  owner: user:dirien
+  type: infrastructure
+  parameters:
+  - title: Provide project information
+    required:
+    - name
+    - owner
+    properties:
+      name:
+        title: Name
+        type: string
+        description: Unique name of the component.
+        ui:field: EntityNamePicker
+      description:
+        title: Description
+        type: string
+        description: Tell us more about this component.
+      owner:
+        title: Owner
+        type: string
+        description: Owner of the component
+        ui:field: OwnerPicker
+        ui:options:
+          allowedKinds:
+          - Group
+      stage:
+        title: Select stage
+        type: string
+        enum:
+        - prod
+        - nonprod
+        enumNames:
+        - Production
+        - Non-Production
+  - title: Choose a location
+    required:
+    - repoUrl
+    properties:
+      repoUrl:
+        title: Repository Location
+        type: string
+        ui:field: RepoUrlPicker
+        ui:options:
+          allowedHosts:
+          - github.com
+  steps:
+  - id: fetch-argo
+    name: Render ArgoCD Application
+    action: fetch:template
+    input:
+      url: ./template-argocd
+      values:
+        name: ${{parameters.name}}
+        repoUrl: "https://github.com/${{ (parameters.repoUrl | parseRepoUrl)['owner'] }}/${{ (parameters.repoUrl | parseRepoUrl)['repo'] }}"
+        stage: ${{parameters.stage}}
+
+  - id: create-argo-pr
+    name: Create PR to ArgoCD App of Apps repo
+    action: publish:github:pull-request
+    input:
+      repoUrl: github.com?repo=backstage-infrastructure-provisioning-templates-workshop&owner=my-backstage-demo
+      title: "Create new project: ${{parameters.name}}"
+      branchName: create-${{parameters.name}}
+      description: |
+        # Create new project: ${{parameters.name}}
+        
+        delivered by ArgoCD App of Apps
+        created by Backstage Scaffolder
+      targetPath: .
+
+  - id: remove-app-of-apps-template
+    name: Delete ArgoCD App of Apps template
+    action: fs:delete
+    input:
+      files:
+      - gitps/teams/apps-${{parameters.stage}}/${{parameters.name}}-application.yaml
+
+
+  - id: template
+    name: Create Project
+    action: fetch:template
+    input:
+      url: ./template-app
+      values:
+        name: "${{ parameters.name }}"
+        description: ${{ parameters.description }}
+        destination: ${{ parameters.repoUrl | parseRepoUrl }}
+        stage: ${{ parameters.stage }}
+        owner: ${{ parameters.owner }}
+        scanner: ${{ parameters.scanner }}
+
+
+  - id: publish
+    name: Publish to GitHub
+    action: publish:github
+    input:
+      allowedHosts: ["github.com"]
+      repoVisibility: public
+      description: "This is ${{ parameters.name }}"
+      repoUrl: ${{ parameters.repoUrl }}
+      defaultBranch: main
+      requiredApprovingReviewCount: 0
+      protectDefaultBranch: false
+
+  - id: wait-for-github
+    name: Wait for GitHub
+    action: debug:wait
+    input:
+      seconds: 10
+
+  - id: register
+    name: Registering the Catalog Info Component
+    action: catalog:register
+    input:
+      repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
+      catalogInfoPath: '/catalog-info.yaml'
+
+  output:
+    links:
+    - url: ${{ steps['create-argo-pr'].output.remoteUrl }}
+      title: "Go to PR"
+    - title: Open the Source Code Repository
+      url: ${{ steps['publish'].output.repoContentsUrl }}
+    - title: Open the Catalog Info Component
+      icon: catalog
+      entityRef: ${{ steps['register'].output.entityRef }}

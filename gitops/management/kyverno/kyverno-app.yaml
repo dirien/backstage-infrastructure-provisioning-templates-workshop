@@ -25,3 +25,28 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kyverno-policies
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  destination:
+    namespace: compliance
+    server: https://kubernetes.default.svc
+  project: infra
+  source:
+    path: "gitops/management/kyverno/policies"
+    targetRevision: main
+    directory:
+      recurse: true
+    repoURL: https://github.com/my-backstage-demo/backstage-infrastructure-provisioning-templates-workshop.git
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true

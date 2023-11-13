@@ -1,0 +1,12 @@
+{
+  "name": "00-infrastructure",
+  "main": "index.ts",
+  "devDependencies": {
+    "@types/node": "^20"
+  },
+  "dependencies": {
+    "@pulumi/pulumi": "^3.93.0",
+    "@ediri/scaleway": "^2.31.0",
+    "@pulumi/kubernetes": "^4.5.4"
+  }
+}

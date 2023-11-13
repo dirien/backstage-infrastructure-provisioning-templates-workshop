@@ -1,0 +1,13 @@
+name: 00-infrastructure
+runtime: nodejs
+description: A minimal TypeScript Pulumi program
+
+config:
+  scaleway:region: "fr-par"
+  scaleway:zone: "fr-par-1"
+  cluster:version: "1.28"
+  cluster:auto_upgrade: true
+  node:node_type: "PLAY2-MICRO"
+  node:auto_scale: false
+  node:node_count: 3
+  node:auto_heal: true

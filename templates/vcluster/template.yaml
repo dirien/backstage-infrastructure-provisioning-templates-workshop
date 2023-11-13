@@ -1,0 +1,86 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: create-kubernetes-cluster
+  title: Create Kubernetes Cluster (vcluster)
+  description: |
+    A template to create a new Kubernetes cluster using vcluster.
+  tags:
+  - kubernetes
+  - vcluster
+  - argocd
+spec:
+  owner: group:infrastructure
+  type: kubernetes
+
+  parameters:
+  - title: We need some information
+    required:
+    - name
+    properties:
+      name:
+        title: Name
+        type: string
+        maxLength: 16
+        pattern: "^[a-z0-9-]*$"
+        description: Unique name of the component
+        ui:field: EntityNamePicker
+        ui:autofocus: true
+      stage:
+        title: Select stage
+        type: string
+        enum:
+        - dev
+        - staging
+        - prod
+        enumNames:
+        - Development
+        - Staging
+        - Production
+        description: |
+          The stage to deploy the bucket to
+      system:
+        title: System
+        type: string
+        description: System this component belongs to.
+        ui:field: EntityPicker
+        ui:options:
+          catalogFilter:
+          - kind: System
+      owner:
+        title: Owner
+        type: string
+        description: Owner of the component
+        ui:field: OwnerPicker
+        ui:options:
+          catalogFilter:
+          - kind: Group
+
+  steps:
+  - id: fetch-base
+    name: Fetch Base
+    action: fetch:template
+    input:
+      url: ./template
+      values:
+        name: ${{parameters.name}}
+        owner: ${{parameters.owner}}
+        stage: ${{parameters.stage}}
+
+  - id: publish
+    name: Publish
+    action: publish:github:pull-request
+    input:
+      repoUrl: github.com?repo=backstage-infrastructure-provisioning-templates-workshop&owner=my-backstage-demo
+      title: "Create new cluster ${{parameters.name}}"
+      branchName: create-${{parameters.name}}
+      description: |
+        ### Create new cluster ${{parameters.name}}
+        
+        Please review the changes and merge this PR if everything looks good.
+      targetPath: .
+
+  output:
+    links:
+    - url: ${{steps.publish.output.remoteUrl}}
+      title: "Go to PR"

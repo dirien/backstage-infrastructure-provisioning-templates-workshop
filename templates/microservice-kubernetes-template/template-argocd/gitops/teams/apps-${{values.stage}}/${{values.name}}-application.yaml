@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: ${{values.name}}-${{values.stage}}-app
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  generators:
+  - clusters:
+      selector:
+        matchLabels:
+          clusterType: vcluster
+          env: ${{values.stage}}
+  template:
+    metadata:
+      name: '{{name}}-app'
+    spec:
+      project: team-${{values.stage}}
+      source:
+        repoURL: ${{values.repoUrl}}
+        targetRevision: HEAD
+        path: kustomize
+      destination:
+        server: '{{server}}'
+        namespace: ${{values.name}}
+      syncPolicy:
+        automated:
+          selfHeal: true
+          prune: true
+        syncOptions:
+        - CreateNamespace=true
