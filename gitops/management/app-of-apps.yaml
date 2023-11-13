@@ -10,7 +10,7 @@ spec:
   project: infra
   source:
     repoURL: https://github.com/my-backstage-demo/backstage-infrastructure-provisioning-templates-workshop.git
-    branch: main
+    targetRevision: main
     path: gitops/management/
     directory:
       recurse: true
