@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: backstage
+  namespace: argocd
+spec:
+  destination:
+    namespace: backstage
+    server: https://kubernetes.default.svc
+  project: infra
+  sources:
+  - repoURL: 'https://backstage.github.io/charts'
+    targetRevision: 1.6.1
+    chart: backstage
+    helm:
+      valueFiles:
+      - $values/gitops/management/backstage/backstage-values.yaml
+  - repoURL: https://github.com/my-backstage-demo/backstage-infrastructure-provisioning-templates-workshop.git
+    targetRevision: main
+    ref: values
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - ServerSideApply=true
+    - CreateNamespace=true
