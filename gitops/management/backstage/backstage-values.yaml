@@ -1,4 +1,5 @@
 backstage:
+  command: ["node", "packages/backend", "--config", "app-config.yaml", "--config", "app-config.production.yaml"]
   image:
     registry: rg.fr-par.scw.cloud/registry-2883dfe
     repository: backstage
