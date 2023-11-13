@@ -1,0 +1,43 @@
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: infrastructure
+  description: The infra team
+spec:
+  type: team
+  profile:
+    displayName: Infrastructure
+  children:
+  - default
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: development
+  description: The development team
+spec:
+  type: team
+  profile:
+    displayName: Development
+  children:
+  - default
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: gitops-system
+  annotations:
+    pulumi.com/orga-slug: dirien
+    backstage.io/kubernetes-id: gitops-cluster
+spec:
+  owner: infrastructure
+  description: GitOps System
+  domain: gitops-platform
+---
+apiVersion: backstage.io/v1alpha1
+kind: Domain
+metadata:
+  name: gitops-platform
+  description: GitOps Platform
+spec:
+  owner: infrastructure

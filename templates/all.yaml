@@ -1,0 +1,8 @@
+apiVersion: backstage.io/v1alpha1
+kind: Location
+metadata:
+  name: pulumi-demo
+  description: A collection of all Backstage entities for a demo Pulumi
+spec:
+  targets:
+  - ./org.yaml
