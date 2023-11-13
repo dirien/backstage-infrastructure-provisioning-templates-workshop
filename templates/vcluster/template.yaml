@@ -26,28 +26,6 @@ spec:
         description: Unique name of the component
         ui:field: EntityNamePicker
         ui:autofocus: true
-      content:
-        title: Website Content
-        type: string
-        ui:widget: textarea
-        ui:options:
-          rows: 10
-        description: |
-          The content of the website
-          This will be written to the index.html file
-          You can use html tags here
-      region:
-        title: Region
-        type: string
-        enum:
-        - eu-central-1
-        - us-east-1
-        - us-east-2
-        - us-west-1
-        - us-west-2
-        default: eu-central-1
-        description: |
-          The region to deploy the bucket to
       stage:
         title: Select stage
         type: string
