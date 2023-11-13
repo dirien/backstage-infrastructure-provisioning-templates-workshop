@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: ${{values.owner | dump}}-vcluster
+  name: ${{ values.owner | parseEntityRef | pick('name') }}-vcluster
   namespace: argocd
 spec:
   destination:
