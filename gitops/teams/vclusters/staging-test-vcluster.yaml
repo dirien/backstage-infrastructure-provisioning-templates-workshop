@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: test-staging-vc
+  namespace: argocd
+spec:
+  destination:
+    namespace: test-staging
+    server: https://kubernetes.default.svc
+  project: clusters
+  sources:
+  - repoURL: 'https://charts.loft.sh/'
+    targetRevision: 0.16.4
+    chart: vcluster
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - ServerSideApply=true
+    - CreateNamespace=true
