@@ -25,3 +25,28 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kyverno-policies
+  namespace: kyverno
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  destination:
+    namespace: kyverno
+    server: https://kubernetes.default.svc
+  project: infra
+  source:
+    path: "gitops/management/kyverno/policies"
+    targetRevision: main
+    directory:
+      recurse: true
+    repoURL: https://github.com/joaquinrz/flamingo-lab.git
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true

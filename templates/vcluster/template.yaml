@@ -75,7 +75,8 @@ spec:
       title: "Create new cluster ${{parameters.name}}"
       branchName: create-${{parameters.name}}
       description: |
-        # Create new cluster ${{parameters.name}}
+        ### Create new cluster ${{parameters.name}}
+        
         Please review the changes and merge this PR if everything looks good.
       targetPath: .
 
