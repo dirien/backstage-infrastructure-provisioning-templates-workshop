@@ -1,0 +1,15 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: argocd
+  description: GitOps operator
+  annotations:
+    backstage.io/kubernetes-namespace: argocd
+    backstage.io/kubernetes-id: gitops-cluster
+spec:
+  owner: infrastructure
+  domain: gitops-platform
+  type: service
+  lifecycle: experimental
+  system: gitops-system
+---
