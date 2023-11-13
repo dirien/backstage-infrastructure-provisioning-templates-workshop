@@ -1,6 +1,6 @@
 backstage:
   image:
-    registry: rg.fr-par.scw.cloud/registry-2883dfe/
+    registry: rg.fr-par.scw.cloud/registry-2883dfe
     repository: backstage
     pullPolicy: Always
   extraEnvVarsSecrets:
