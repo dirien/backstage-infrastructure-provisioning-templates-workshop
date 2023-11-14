@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: payment-ms-nonprod-app
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  generators:
+  - clusters:
+      selector:
+        matchLabels:
+          clusterType: vcluster
+          env: nonprod
+  template:
+    metadata:
+      name: '{{name}}-app'
+    spec:
+      project: team-nonprod
+      source:
+        repoURL: https://github.com/my-backstage-demo/payment-ms
+        targetRevision: HEAD
+        path: kustomize
+      destination:
+        server: '{{server}}'
+        namespace: payment-ms
+      syncPolicy:
+        automated:
+          selfHeal: true
+          prune: true
+        syncOptions:
+        - CreateNamespace=true
