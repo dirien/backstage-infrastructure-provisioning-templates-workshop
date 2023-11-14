@@ -120,6 +120,12 @@ spec:
       requiredApprovingReviewCount: 0
       protectDefaultBranch: false
 
+  - id: wait-for-github
+    name: Wait for GitHub
+    action: debug:wait
+    input:
+      seconds: 10
+
   - id: register
     name: Registering the Catalog Info Component
     action: catalog:register
