@@ -66,7 +66,7 @@ spec:
     name: Render ArgoCD Application
     action: fetch:template
     input:
-      url: ./template-argo
+      url: ./template-argocd
       values:
         name: ${{parameters.name}}
         repoUrl: "https://github.com/${{ (parameters.repoUrl | parseRepoUrl)['owner'] }}/${{ (parameters.repoUrl | parseRepoUrl)['repo'] }}"
@@ -129,6 +129,8 @@ spec:
 
   output:
     links:
+    - url: ${{ steps['create-argo-pr'].output.remoteUrl }}
+      title: "Go to PR"
     - title: Open the Source Code Repository
       url: ${{ steps['publish'].output.repoContentsUrl }}
     - title: Open the Catalog Info Component
