@@ -16,7 +16,7 @@ spec:
     metadata:
       name: '{{name}}-app'
     spec:
-      project: team-${{values.stage}
+      project: team-${{values.stage}}
       source:
         repoURL: ${{values.repoUrl}}
         targetRevision: HEAD
