@@ -8,3 +8,4 @@ spec:
   - ./org.yaml
   - ./components.yaml
   - ./vcluster/template.yaml
+  - ./microservice-kubernetes-template/template.yaml
