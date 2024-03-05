@@ -17,16 +17,17 @@ spec:
     targetRevision: 1.6.1
     chart: backstage
     helm:
-      # because of bug in argocd when we use multiple sources
-      # https://github.com/argoproj-labs/argocd-image-updater/pull/548
-      backstage:
-        command: ["node", "packages/backend", "--config", "app-config.yaml", "--config", "app-config.production.yaml"]
-        image:
-          registry: 052848974346.dkr.ecr.eu-central-1.amazonaws.com
-          repository: backstage
-          pullPolicy: Always
-        extraEnvVarsSecrets:
-        - global-secret
+      values: |
+        # because of bug in argocd when we use multiple sources
+        # https://github.com/argoproj-labs/argocd-image-updater/pull/548
+        backstage:
+          command: ["node", "packages/backend", "--config", "app-config.yaml", "--config", "app-config.production.yaml"]
+          image:
+            registry: 052848974346.dkr.ecr.eu-central-1.amazonaws.com
+            repository: backstage
+            pullPolicy: Always
+          extraEnvVarsSecrets:
+          - global-secret
       #valueFiles:
       #- $values/gitops/management/backstage/backstage-values.yaml
   #- repoURL: https://github.com/my-backstage-demo/backstage-infrastructure-provisioning-templates-workshop.git
