@@ -10,6 +10,9 @@ spec:
   project: infra
   sources:
   - repoURL: 'https://argoproj.github.io/argo-helm'
+    targetRevision: 0.9.5
+    chart: argocd-image-updater
+  - repoURL: 'https://argoproj.github.io/argo-helm'
     targetRevision: 6.6.0
     chart: argo-cd
     helm:
