@@ -13,7 +13,7 @@ authScripts:
   scripts:
     ecr-login.sh: |
       #!/bin/sh
-      echo /aws-creds/ecr
+      cat /aws-creds/ecr
 
 initContainers:
 - name: ecr-login
