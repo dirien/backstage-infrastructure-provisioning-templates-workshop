@@ -11,7 +11,8 @@ spec:
     namespace: backstage
     server: https://kubernetes.default.svc
   project: infra
-  sources:
+  # sources:
+  source:
   - repoURL: 'https://backstage.github.io/charts'
     targetRevision: 1.6.1
     chart: backstage
