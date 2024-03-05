@@ -14,7 +14,7 @@ spec:
     path: gitops/management/
     directory:
       recurse: true
-      exclude: '{*values.yaml,*dashboard.yaml,*policy.yaml,*resource.yaml}'
+      exclude: '{*values.yaml,*dashboard.yaml,*policy.yaml,*resource.yaml,**/secrets/*}'
   syncPolicy:
     automated:
       prune: true
