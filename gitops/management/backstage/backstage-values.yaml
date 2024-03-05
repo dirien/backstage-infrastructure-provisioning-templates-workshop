@@ -1,7 +1,7 @@
 backstage:
   command: ["node", "packages/backend", "--config", "app-config.yaml", "--config", "app-config.production.yaml"]
   image:
-    registry: rg.fr-par.scw.cloud/registry-2883dfe
+    registry: 052848974346.dkr.ecr.eu-central-1.amazonaws.com
     repository: backstage
     pullPolicy: Always
   extraEnvVarsSecrets:
