@@ -5,8 +5,7 @@ metadata:
   namespace: argocd
   annotations:
     argocd-image-updater.argoproj.io/write-back-method: argocd
-    argocd-image-updater.argoproj.io/image-list: |
-      - myapp=052848974346.dkr.ecr.eu-central-1.amazonaws.com/backstage
+    argocd-image-updater.argoproj.io/image-list: myapp=052848974346.dkr.ecr.eu-central-1.amazonaws.com/backstage
     argocd-image-updater.argoproj.io/myapp.force-update: "true"
     argocd-image-updater.argoproj.io/myapp.update-strategy: latest
     argocd-image-updater.argoproj.io/myapp.ignore-tags: latest, master
