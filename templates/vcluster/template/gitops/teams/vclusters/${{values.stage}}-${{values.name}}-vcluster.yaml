@@ -10,7 +10,7 @@ spec:
   project: clusters
   sources:
   - repoURL: 'https://charts.loft.sh/'
-    targetRevision: 0.16.4
+    targetRevision: 0.19.3
     chart: vcluster
   syncPolicy:
     automated:
