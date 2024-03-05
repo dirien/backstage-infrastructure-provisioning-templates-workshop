@@ -13,7 +13,7 @@ spec:
   project: infra
   # sources:
   source:
-  - repoURL: 'https://backstage.github.io/charts'
+    repoURL: 'https://backstage.github.io/charts'
     targetRevision: 1.6.1
     chart: backstage
     helm:
