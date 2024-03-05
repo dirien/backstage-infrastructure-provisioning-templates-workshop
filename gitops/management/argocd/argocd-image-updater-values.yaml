@@ -13,7 +13,7 @@ authScripts:
   scripts:
     ecr-login.sh: |
       #!/bin/sh
-      echo $(aws ecr get-authorization-token --output text --query 'authorizationData[].authorizationToken' | base64 -d)
+      echo /aws-creds/ecr
 
 initContainers:
 - name: ecr-login
