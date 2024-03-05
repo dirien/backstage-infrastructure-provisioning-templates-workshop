@@ -2,7 +2,7 @@ extraEnv:
 - name: PULUMI_ACCESS_TOKEN
   valueFrom:
     secretKeyRef:
-      key: global-secret
-      name: pulumi-access-token
+      key: pulumi-access-token
+      name: global-secret
 
 fullnameOverride: pulumi-operator
