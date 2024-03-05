@@ -11,3 +11,4 @@ spec:
         secretRef:
           name: pulumi-access-token
           key: PULUMI_ACCESS_TOKEN
+          namespace: argocd
