@@ -18,6 +18,7 @@ spec:
     chart: backstage
     helm:
       # because of bug in argocd when we use multiple sources
+      # https://github.com/argoproj-labs/argocd-image-updater/pull/548
       backstage:
         command: ["node", "packages/backend", "--config", "app-config.yaml", "--config", "app-config.production.yaml"]
         image:
