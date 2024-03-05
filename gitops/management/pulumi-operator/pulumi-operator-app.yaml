@@ -34,7 +34,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "5"
 spec:
   destination:
-    namespace: backstage
+    namespace: pulumi-operator
     server: https://kubernetes.default.svc
   project: infra
   source:
