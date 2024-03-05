@@ -1,12 +1,12 @@
 config:
   registries:
-     - name: ECR
-       api_url: https://052848974346.dkr.ecr.eu-central-1.amazonaws.com
-       prefix: 052848974346.dkr.ecr.eu-central-1.amazonaws.com
-       ping: yes
-       insecure: no
-       credentials: ext:/scripts/ecr-login.sh
-       credsexpire: 10h
+  - name: ECR
+    api_url: https://052848974346.dkr.ecr.eu-central-1.amazonaws.com
+    prefix: 052848974346.dkr.ecr.eu-central-1.amazonaws.com
+    ping: yes
+    insecure: no
+    credentials: ext:/scripts/ecr-login.sh
+    credsexpire: 10h
 
 authScripts:
   enabled: true
@@ -14,3 +14,21 @@ authScripts:
     ecr-login.sh: |
       #!/bin/sh
       echo $(aws ecr get-authorization-token --output text --query 'authorizationData[].authorizationToken' | base64 -d)
+
+initContainers:
+- name: ecr-login
+  image: amazon/aws-cli
+  volumeMounts:
+  - name: aws-creds
+    mountPath: /aws-creds
+  command: ["/bin/sh", "-c"]
+  args: ["echo -n $(aws ecr get-authorization-token --output text --query 'authorizationData[].authorizationToken' | base64 -d) > /aws-creds/ecr"]
+
+volumes:
+- name: aws-creds
+  emptyDir: {}
+
+volumeMounts:
+- name: aws-creds
+  mountPath: /aws-creds
+  readOnly: true
