@@ -5,7 +5,9 @@ metadata:
   namespace: argocd
   annotations:
     argocd-image-updater.argoproj.io/image-list: |
-      - 052848974346.dkr.ecr.eu-central-1.amazonaws.com/backstage
+      - backstage=052848974346.dkr.ecr.eu-central-1.amazonaws.com/backstage
+    argocd-image-updater.argoproj.io/backstage.update-strategy: latest
+    argocd-image-updater.argoproj.io/backstage.force-update: "true"
 spec:
   destination:
     namespace: backstage
