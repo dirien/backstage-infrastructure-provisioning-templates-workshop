@@ -5,8 +5,18 @@ configs:
   params:
     server.insecure: true
 
+  repositories:
+    pulumi-oci:
+      url: ghcr.io/pulumi/helm-charts
+      type: helm
+      name: pulumi-kubernetes-operator
+      enableOCI: "true"
+
 global:
   additionalLabels:
     backstage.io/kubernetes-id: gitops-cluster
   podLabels:
     backstage.io/kubernetes-id: gitops-cluster
+
+
+
