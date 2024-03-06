@@ -79,10 +79,10 @@ spec:
     action: publish:github:pull-request
     input:
       repoUrl: github.com?repo=backstage-infrastructure-provisioning-templates-workshop&owner=my-backstage-demo
-      title: "Create new cluster ${{parameters.name}}"
+      title: "Create new helm deployment ${{parameters.name}}"
       branchName: create-${{parameters.name}}
       description: |
-        ### Create new cluster ${{parameters.name}}
+        ### Create new helm deployment ${{parameters.name}}
         
         Please review the changes and merge this PR if everything looks good.
       targetPath: .
