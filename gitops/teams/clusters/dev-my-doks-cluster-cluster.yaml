@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: my-doks-cluster-dev
+  namespace: argocd
+spec:
+  destination:
+    namespace: my-doks-cluster-dev
+    server: https://kubernetes.default.svc
+  project: 
+  source:
+    path: "gitops/teams/clusters/my-doks-cluster-dev-cluster"
+    targetRevision: main
+    repoURL: https://github.com/my-backstage-demo/backstage-infrastructure-provisioning-templates-workshop.git
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - ServerSideApply=true
+    - CreateNamespace=true
