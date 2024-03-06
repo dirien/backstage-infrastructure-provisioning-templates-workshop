@@ -1,0 +1,8 @@
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: my-vcluster-be
+  description: vCluster for my-vcluster-be-dev
+spec:
+  type: kubernetes-cluster
+  owner: group:default/developmentb
