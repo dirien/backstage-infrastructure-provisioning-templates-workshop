@@ -7,7 +7,7 @@ spec:
   destination:
     namespace: ${{values.name}}-${{values.stage}}
     server: https://kubernetes.default.svc
-  project: ${{values.owner | dump}}
+  project: ${{ (values.owner | parseEntityRef).name }}
   source:
     repoURL: 'https://charts.loft.sh/'
     targetRevision: 0.19.3
