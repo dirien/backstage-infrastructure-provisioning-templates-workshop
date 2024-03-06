@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: ${{values.name}}-${{values.stage}}-app
+  name: ${{values.name}}-${{ (values.owner | parseEntityRef).name }}-app
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "5"
