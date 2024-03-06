@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: app-of-vclusters
+  name: app-of-clusters
   namespace: argocd
 spec:
   destination:
