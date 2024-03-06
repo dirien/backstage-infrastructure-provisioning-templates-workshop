@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: ${{values.name}}-${{values.stage}}-${{parameters.owner}}
+  name: ${{values.name}}-${{values.stage}}-${{ (values.owner | parseEntityRef).name }}
   namespace: argocd
 spec:
   destination:
