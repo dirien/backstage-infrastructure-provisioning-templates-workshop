@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: podinfo-developmenta-app
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  generators:
+  - clusters:
+      selector:
+        matchLabels:
+          team: developmenta
+  template:
+    metadata:
+      name: '{{name}}-app'
+    spec:
+      project: developmenta
+      source:
+        repoURL: https://stefanprodan.github.io/podinfo
+        chart: podinfo
+        targetRevision: 6.6.0
+      destination:
+        server: '{{server}}'
+        namespace: podinfo
+      syncPolicy:
+        automated:
+          selfHeal: true
+          prune: true
+        syncOptions:
+        - CreateNamespace=true
