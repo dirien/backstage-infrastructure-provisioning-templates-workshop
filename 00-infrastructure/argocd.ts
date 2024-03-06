@@ -10,9 +10,12 @@ export interface InitialRepository {
 
 export interface ArgoCDArgs {
     initialObjects?: pulumi.asset.FileAsset
+    namespace?: pulumi.Input<string>;
 }
 
 export class ArgoCD extends pulumi.ComponentResource {
+    readonly namespace: pulumi.Input<string>;
+
     constructor(name: string,
                 args: ArgoCDArgs,
                 opts: pulumi.ComponentResourceOptions = {}) {
@@ -20,13 +23,12 @@ export class ArgoCD extends pulumi.ComponentResource {
 
         const argocd = new k8s.helm.v3.Release("argocd", {
             chart: "argo-cd",
-            version: "5.51.1",
+            version: "6.6.0",
             repositoryOpts: {
                 repo: "https://argoproj.github.io/argo-helm",
             },
             createNamespace: true,
-
-            namespace: "argocd",
+            namespace: args.namespace || "argocd",
             values: {
                 configs: {
                     secret: {
@@ -80,6 +82,11 @@ export class ArgoCD extends pulumi.ComponentResource {
         }, {
             parent: this,
             dependsOn: argocd,
+        });
+
+        this.namespace = argocd.namespace;
+        this.registerOutputs({
+            namespace: this.namespace
         });
     }
 }

@@ -1,11 +1,26 @@
-import * as pulumi from "@pulumi/pulumi";
-import * as scaleway from "@ediri/scaleway";
+import * as aws from "@pulumi/aws";
 import * as docker from "@pulumi/docker";
 import {local} from "@pulumi/command";
 
-const containerRegistry = new scaleway.RegistryNamespace("registry", {
-    isPublic: true,
-})
+const repository = new aws.ecr.Repository("backstage-repository", {
+    name: "backstage",
+    forceDelete: true,
+});
+
+const registryInfo = repository.registryId.apply(async id => {
+    const credentials = await aws.ecr.getCredentials({registryId: id});
+    const decodedCredentials = Buffer.from(credentials.authorizationToken, "base64").toString();
+    const [username, password] = decodedCredentials.split(":");
+    if (!password || !username) {
+        throw new Error("Invalid credentials");
+    }
+    return {
+        server: credentials.proxyEndpoint,
+        username: username,
+        password: password,
+    };
+});
+
 
 const backstageBuild = new local.Command("backstage-build", {
     dir: "./backstage",
@@ -21,15 +36,10 @@ const image = new docker.Image("backstage-image", {
         builderVersion: docker.BuilderVersion.BuilderBuildKit,
         dockerfile: "./backstage/packages/backend/Dockerfile",
     },
-    imageName: containerRegistry.endpoint.apply(s => `${s}/backstage`),
-    registry: {
-        server: containerRegistry.endpoint,
-        username: "nologin",
-        password: process.env.SCW_SECRET_KEY,
-    }
+    imageName: repository.repositoryUrl,
+    registry: registryInfo,
 }, {
     dependsOn: [
-        containerRegistry,
         backstageBuild
     ]
 });

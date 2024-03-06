@@ -12,9 +12,6 @@ spec:
   source:
     path: gitops/teams/vclusters
     targetRevision: main
-    directory:
-      recurse: true
-      exclude: '{*values.yaml,*dashboard.yaml,*policy.yaml}'
     repoURL: https://github.com/my-backstage-demo/backstage-infrastructure-provisioning-templates-workshop.git
   syncPolicy:
     automated:

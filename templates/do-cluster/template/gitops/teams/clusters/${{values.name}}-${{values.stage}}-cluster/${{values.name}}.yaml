@@ -83,10 +83,15 @@ program:
         metadata:
           name: "${clusterName}-do2"
         stringData:
-          certificate-authority:
-            fn::fromBase64: "${do_argocd_secret.data[\"ca.crt\"]}"
-          client-certificate:
-            fn::fromBase64: "${do_argocd_secret.data[\"token\"]}"
+          name: "${clusterName}"
+          server: "${do_cluster.endpoint}"
+          config:
+            fn::toJSON:
+              bearerToken:
+                fn::fromBase64: ${do_argocd_secret.data["token"]}
+              tlsClientConfig:
+                caData: ${do_argocd_secret.data["ca.crt"]}
+                insecure: false
 ---
 apiVersion: pulumi.com/v1
 kind: Stack
