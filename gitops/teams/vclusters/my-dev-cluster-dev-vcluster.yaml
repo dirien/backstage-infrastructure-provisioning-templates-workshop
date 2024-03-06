@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: my-dev-cluster-dev-
+  namespace: argocd
+spec:
+  destination:
+    namespace: my-dev-cluster-dev
+    server: https://kubernetes.default.svc
+  project: 
+  source:
+    repoURL: 'https://charts.loft.sh/'
+    targetRevision: 0.19.3
+    chart: vcluster
+    helm:
+      values: |
+        syncer:
+          storage:
+            persistence: false
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - ServerSideApply=true
+    - CreateNamespace=true
