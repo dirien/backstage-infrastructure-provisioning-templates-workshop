@@ -82,6 +82,7 @@ program:
       properties:
         metadata:
           name: "${clusterName}-do2"
+          namespace: argocd
           labels:
             argocd.argoproj.io/secret-type: cluster
             clusterType: "doks"

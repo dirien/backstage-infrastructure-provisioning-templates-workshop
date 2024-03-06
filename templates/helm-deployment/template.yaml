@@ -1,31 +1,40 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: create-kubernetes-cluster
-  title: Create Kubernetes Cluster (vcluster)
+  name: deploy-helm-chart
+  title: Deploy Helm Chart
   description: |
-    A template to create a new Kubernetes cluster using vcluster.
+    A template for deploying a Helm chart to a Kubernetes cluster using ArgoCD ApplicationSet.
   tags:
+  - helm
   - kubernetes
-  - vcluster
   - argocd
 spec:
   owner: group:infrastructure
-  type: kubernetes
-
+  type: infrastructure
   parameters:
-  - title: We need some information
+  - title: Provide project information
     required:
     - name
+    - owner
     properties:
       name:
         title: Name
         type: string
-        maxLength: 16
-        pattern: "^[a-z0-9-]*$"
-        description: Unique name of the component
+        description: Unique name of the component.
         ui:field: EntityNamePicker
-        ui:autofocus: true
+      description:
+        title: Description
+        type: string
+        description: Tell us more about this component.
+      owner:
+        title: Owner
+        type: string
+        description: Owner of the component
+        ui:field: OwnerPicker
+        ui:options:
+          allowedKinds:
+          - Group
       stage:
         title: Select stage
         type: string
@@ -38,27 +47,22 @@ spec:
         - Staging
         - Production
         description: |
-          The stage of the cluster
-      system:
-        title: System
+          The stage of the application
+      repoUrl:
+        title: Helm Chart Repository
         type: string
-        description: System this component belongs to.
-        ui:field: EntityPicker
-        ui:options:
-          catalogFilter:
-          - kind: System
-      owner:
-        title: Owner
+        description: The URL of the Helm chart repository, OCI is not supported.
+      chart:
+        title: Helm Chart
         type: string
-        description: Owner of the component
-        ui:field: OwnerPicker
-        ui:options:
-          catalogFilter:
-          - kind: Group
-
+        description: The name of the Helm chart to deploy.
+      targetRevision:
+        title: Version
+        type: string
+        description: The version of the Helm chart to deploy.
   steps:
-  - id: fetch-base
-    name: Fetch Base
+  - id: fetch-argo
+    name: Render ArgoCD Application
     action: fetch:template
     input:
       url: ./template
@@ -66,6 +70,9 @@ spec:
         name: ${{parameters.name}}
         owner: ${{parameters.owner}}
         stage: ${{parameters.stage}}
+        repoUrl: ${{parameters.repoUrl}}
+        chart: ${{parameters.chart}}
+        targetRevision: ${{parameters.targetRevision}}
 
   - id: publish
     name: Publish
