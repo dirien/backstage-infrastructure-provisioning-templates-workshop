@@ -1,13 +1,13 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: create-kubernetes-cluster
-  title: Create Kubernetes Cluster (vcluster)
+  name: create-kubernetes-cluster-doks
+  title: Create Kubernetes Cluster (DOKS)
   description: |
-    A template to create a new Kubernetes cluster using vcluster.
+    A template to create a new Kubernetes cluster in DigitalOcean Kubernetes Service (DOKS).
   tags:
   - kubernetes
-  - vcluster
+  - doks
   - argocd
 spec:
   owner: group:infrastructure
