@@ -13,12 +13,24 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Group
 metadata:
-  name: development
-  description: The development team
+  name: developmenta
+  description: The development team A
 spec:
   type: team
   profile:
-    displayName: Development
+    displayName: Development A
+  children:
+  - default
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: developmentb
+  description: The development team B
+spec:
+  type: team
+  profile:
+    displayName: Development B
   children:
   - default
 ---
