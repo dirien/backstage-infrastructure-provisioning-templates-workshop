@@ -10,8 +10,12 @@ spec:
   - clusters:
       selector:
         matchLabels:
+          {%- if values.stage %}
           env: ${{values.stage}}
+          {%- endif %}
+          {%- if values.owner %}
           team: ${{ (values.owner | parseEntityRef).name }}
+          {%- endif %}
   template:
     metadata:
       name: '{{name}}-app'
