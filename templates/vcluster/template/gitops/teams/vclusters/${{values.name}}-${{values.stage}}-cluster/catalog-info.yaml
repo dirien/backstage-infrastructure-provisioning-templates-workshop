@@ -5,4 +5,4 @@ metadata:
   description: vCluster for ${{values.name}}-${{values.stage}}
 spec:
   type: kubernetes-cluster
-  owner: ${{values.owner}}
+  owner: ${{ values.owner }}

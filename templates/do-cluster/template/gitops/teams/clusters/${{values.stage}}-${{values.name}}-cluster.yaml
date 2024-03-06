@@ -1,15 +1,18 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: ${{values.name}}-${{values.stage}}
+  name: ${{values.name}}-${{values.stage}}-${{ (values.owner | parseEntityRef).name }}
   namespace: argocd
 spec:
   destination:
     namespace: pulumi-operator
     server: https://kubernetes.default.svc
-  project: ${{values.owner}}
+  project: ${{ (values.owner | parseEntityRef).name }}
   source:
     path: "gitops/teams/clusters/${{values.name}}-${{values.stage}}-cluster"
+    directory:
+      recurse: false
+      exclude: '{catalog-info.yaml}'
     targetRevision: main
     repoURL: https://github.com/my-backstage-demo/backstage-infrastructure-provisioning-templates-workshop.git
   syncPolicy:

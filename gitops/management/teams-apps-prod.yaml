@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: app-of-team-apps-prod
+  name: app-of-team-apps
   namespace: argocd
 spec:
   destination:
@@ -10,7 +10,7 @@ spec:
     server: https://kubernetes.default.svc
   project: infra
   source:
-    path: gitops/teams/apps-prod
+    path: gitops/teams/apps
     targetRevision: main
     directory:
       recurse: true

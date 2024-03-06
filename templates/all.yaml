@@ -10,3 +10,4 @@ spec:
   - ./vcluster/template.yaml
   - ./microservice-kubernetes-template/template.yaml
   - ./do-cluster/template.yaml
+  - ./helm-deployment/template.yaml

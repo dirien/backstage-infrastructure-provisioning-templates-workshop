@@ -1,0 +1,96 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: deploy-helm-chart
+  title: Deploy Helm Chart
+  description: |
+    A template for deploying a Helm chart to a Kubernetes cluster using ArgoCD ApplicationSet.
+  tags:
+  - helm
+  - kubernetes
+  - argocd
+spec:
+  owner: group:infrastructure
+  type: infrastructure
+  parameters:
+  - title: Provide project information
+    required:
+    - name
+    - owner
+    - repoUrl
+    - chart
+    - targetRevision
+    properties:
+      name:
+        title: Name
+        type: string
+        description: Unique name of the component.
+        ui:field: EntityNamePicker
+      description:
+        title: Description
+        type: string
+        description: Tell us more about this component.
+      owner:
+        title: Owner
+        type: string
+        description: Owner of the component
+        ui:field: OwnerPicker
+        ui:options:
+          allowedKinds:
+          - Group
+      stage:
+        title: Select stage
+        type: string
+        enum:
+        - dev
+        - staging
+        - prod
+        enumNames:
+        - Development
+        - Staging
+        - Production
+        description: |
+          The stage of the application
+      repoUrl:
+        title: Helm Chart Repository
+        type: string
+        description: The URL of the Helm chart repository, OCI is not supported.
+      chart:
+        title: Helm Chart
+        type: string
+        description: The name of the Helm chart to deploy.
+      targetRevision:
+        title: Version
+        type: string
+        description: The version of the Helm chart to deploy.
+  steps:
+  - id: fetch-argo
+    name: Render ArgoCD Application
+    action: fetch:template
+    input:
+      url: ./template
+      values:
+        name: ${{parameters.name}}
+        owner: ${{parameters.owner}}
+        stage: ${{parameters.stage}}
+        repoUrl: ${{parameters.repoUrl}}
+        chart: ${{parameters.chart}}
+        targetRevision: ${{parameters.targetRevision}}
+
+  - id: publish
+    name: Publish
+    action: publish:github:pull-request
+    input:
+      repoUrl: github.com?repo=backstage-infrastructure-provisioning-templates-workshop&owner=my-backstage-demo
+      title: "Create new helm deployment ${{parameters.name}}"
+      branchName: create-${{parameters.name}}
+      description: |
+        ### Create new helm deployment ${{parameters.name}}
+        
+        Please review the changes and merge this PR if everything looks good.
+      targetPath: .
+
+  output:
+    links:
+    - url: ${{steps.publish.output.remoteUrl}}
+      title: "Go to PR"
