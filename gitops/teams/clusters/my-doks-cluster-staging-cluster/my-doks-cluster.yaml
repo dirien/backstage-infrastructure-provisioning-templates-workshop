@@ -1,7 +1,7 @@
 apiVersion: pulumi.com/v1
 kind: Program
 metadata:
-  name: ${{values.name}}
+  name: my-doks-cluster
 program:
   variables:
     clusterName: "do-cluster"
@@ -86,8 +86,8 @@ program:
           labels:
             argocd.argoproj.io/secret-type: cluster
             clusterType: "doks"
-            env: "${{values.stage}}"
-            team: "${{ (values.owner | parseEntityRef).name }}"
+            env: "staging"
+            team: "developmenta"
         stringData:
           name: "${clusterName}"
           server: "${do_cluster.endpoint}"
@@ -102,14 +102,14 @@ program:
 apiVersion: pulumi.com/v1
 kind: Stack
 metadata:
-  name: ${{values.name}}
+  name: my-doks-cluster
 spec:
-  stack: ${{values.stack}}
+  stack: ediri/my-doks-cluster/staging
   envRefs:
     DIGITALOCEAN_TOKEN:
       type: Env
       env:
         name: DIGITALOCEAN_TOKEN
   programRef:
-    name: ${{values.name}}
+    name: my-doks-cluster
   destroyOnFinalize: false

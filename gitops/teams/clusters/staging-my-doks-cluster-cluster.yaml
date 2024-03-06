@@ -1,25 +1,24 @@
-#Root app for creating workload virtual clusters; clusters definition is in gitops/workload/clusters/vclusters
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: app-of-team-apps-nonprod
+  name: my-doks-cluster-staging-developmenta
   namespace: argocd
 spec:
   destination:
-    namespace: argocd
+    namespace: pulumi-operator
     server: https://kubernetes.default.svc
-  project: infra
+  project: developmenta
   source:
-    path: gitops/teams/apps-nonprod
-    targetRevision: main
+    path: "gitops/teams/clusters/my-doks-cluster-staging-cluster"
     directory:
-      recurse: true
-      exclude: '{*values.yaml,*dashboard.yaml,*policy.yaml}'
+      recurse: false
+      exclude: '{catalog-info.yaml}'
+    targetRevision: main
     repoURL: https://github.com/my-backstage-demo/backstage-infrastructure-provisioning-templates-workshop.git
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
-    - CreateNamespace=true
     - ServerSideApply=true
+    - CreateNamespace=true

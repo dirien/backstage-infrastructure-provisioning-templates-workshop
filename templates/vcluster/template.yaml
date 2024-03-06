@@ -38,7 +38,7 @@ spec:
         - Staging
         - Production
         description: |
-          The stage to deploy the bucket to
+          The stage of the cluster
       system:
         title: System
         type: string

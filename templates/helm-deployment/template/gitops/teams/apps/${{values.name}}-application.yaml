@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: ${{values.name}}-${{ (values.owner | parseEntityRef).name }}-app
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  generators:
+  - clusters:
+      selector:
+        matchLabels:
+          {%- if values.stage %}
+          env: ${{values.stage}}
+          {%- endif %}
+          {%- if values.owner %}
+          team: ${{ (values.owner | parseEntityRef).name }}
+          {%- endif %}
+  template:
+    metadata:
+      name: '{{name}}-app'
+    spec:
+      project: ${{ (values.owner | parseEntityRef).name }}
+      source:
+        repoURL: ${{values.repoUrl}}
+        chart: ${{values.chart}}
+        targetRevision: ${{values.targetRevision}}
+      destination:
+        server: '{{server}}'
+        namespace: ${{values.name}}
+      syncPolicy:
+        automated:
+          selfHeal: true
+          prune: true
+        syncOptions:
+        - CreateNamespace=true
+        - ServerSideApply=true
