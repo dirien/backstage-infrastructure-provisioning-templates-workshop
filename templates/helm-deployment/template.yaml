@@ -17,6 +17,9 @@ spec:
     required:
     - name
     - owner
+    - repoUrl
+    - chart
+    - targetRevision
     properties:
       name:
         title: Name
