@@ -82,6 +82,11 @@ program:
       properties:
         metadata:
           name: "${clusterName}-do2"
+          labels:
+            argocd.argoproj.io/secret-type: cluster
+            clusterType: "doks"
+            env: "${{values.stage}}"
+            team: "${{ (values.owner | parseEntityRef).name }}"
         stringData:
           name: "${clusterName}"
           server: "${do_cluster.endpoint}"
