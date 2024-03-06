@@ -7,7 +7,7 @@ spec:
   destination:
     namespace: pulumi-operator
     server: https://kubernetes.default.svc
-  project: ${{values.owner}}
+  project: ${{ (values.owner | parseEntityRef).name }}
   source:
     path: "gitops/teams/clusters/${{values.name}}-${{values.stage}}-cluster"
     targetRevision: main

@@ -1,5 +1,5 @@
 app:
-  title: Zephyr Archaeotech Emporium Backstage App
+  title: Zephyr Archaeotech Emporium Backstage
   baseUrl: http://localhost:7007
 
 organization:
