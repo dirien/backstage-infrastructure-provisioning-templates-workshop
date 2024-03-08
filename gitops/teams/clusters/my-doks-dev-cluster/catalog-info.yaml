@@ -1,0 +1,8 @@
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: my-doks
+  description: DigitalOcean Kubernetes Cluster for my-doks-dev
+spec:
+  type: kubernetes-cluster
+  owner: group:default/developmenta
