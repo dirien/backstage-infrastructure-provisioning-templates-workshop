@@ -1,37 +1,37 @@
 applications:
-- name: app-of-apps
-  namespace: argocd
-  finalizers:
-  - resources-finalizer.argocd.argoproj.io
-  project: infra
-  source:
-    repoURL: https://github.com/my-backstage-demo/backstage-infrastructure-provisioning-templates-workshop.git
-    branch: main
-    path: gitops/management/
-  destination:
-    server: https://kubernetes.default.svc
+  app-of-apps:
     namespace: argocd
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-  syncOptions:
-  - CreateNamespace=true
-  - ServerSideApply=true
+    finalizers:
+    - resources-finalizer.argocd.argoproj.io
+    project: infra
+    source:
+      repoURL: https://github.com/my-backstage-demo/backstage-infrastructure-provisioning-templates-workshop.git
+      branch: main
+      path: gitops/management/
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: argocd
+    syncPolicy:
+      automated:
+        prune: true
+        selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+    - ServerSideApply=true
 
 projects:
-- name: infra
-  namespace: argocd
-  finalizers:
-  - resources-finalizer.argocd.argoproj.io
-  description: Infrastructure components on management cluster
-  sourceRepos:
-  - '*'
-  destinations:
-  - namespace: "*"
-    server: https://kubernetes.default.svc
-  clusterResourceWhitelist:
-  - group: '*'
-    kind: '*'
-  sourceNamespaces:
-  - '*'
+  infra:
+    namespace: argocd
+    finalizers:
+    - resources-finalizer.argocd.argoproj.io
+    description: Infrastructure components on management cluster
+    sourceRepos:
+    - '*'
+    destinations:
+    - namespace: "*"
+      server: https://kubernetes.default.svc
+    clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+    sourceNamespaces:
+    - '*'
