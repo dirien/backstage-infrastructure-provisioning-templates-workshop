@@ -10,13 +10,13 @@ spec:
   project: infra
   sources:
   - repoURL: 'https://argoproj.github.io/argo-helm'
-    targetRevision: 0.9.5
+    targetRevision: 0.9.7
     chart: argocd-image-updater
     helm:
       valueFiles:
       - $values/gitops/management/argocd/argocd-image-updater-values.yaml
   - repoURL: 'https://argoproj.github.io/argo-helm'
-    targetRevision: 6.6.0
+    targetRevision: 6.7.14
     chart: argo-cd
     helm:
       valueFiles:
