@@ -1,0 +1,115 @@
+apiVersion: pulumi.com/v1
+kind: Program
+metadata:
+  name: my-doks-cluster
+program:
+  variables:
+    clusterName: "do-cluster"
+    clusterRegion: "nyc1"
+    nodePoolName: "default"
+    nodeCount: 1
+    version: 1.29.1-do.0
+
+  resources:
+    do_cluster:
+      type: digitalocean:KubernetesCluster
+      properties:
+        name: "${clusterName}"
+        region: "${clusterRegion}"
+        version: "${version}"
+        destroyAllAssociatedResources: true
+        nodePool:
+          name: "${nodePoolName}"
+          size: "s-2vcpu-2gb"
+          nodeCount: "${nodeCount}"
+    do_k8s_provider:
+      type: pulumi:providers:kubernetes
+      properties:
+        enableServerSideApply: true
+        kubeconfig: "${do_cluster.kubeConfigs[0].rawConfig}"
+    do_argocd_service_account:
+      type: kubernetes:core/v1:ServiceAccount
+      properties:
+        metadata:
+          name: argocd-manager
+          namespace: kube-system
+      options:
+        provider: ${do_k8s_provider}
+    do_argocd_secret:
+      type: kubernetes:core/v1:Secret
+      properties:
+        metadata:
+          name: argocd-secret
+          namespace: kube-system
+          annotations:
+            "kubernetes.io/service-account.name": ${do_argocd_service_account.metadata.name}
+        type: kubernetes.io/service-account-token
+      options:
+        provider: ${do_k8s_provider}
+    do_argocd_cluster_role:
+      type: kubernetes:rbac.authorization.k8s.io/v1:ClusterRole
+      properties:
+        metadata:
+          name: argocd-manager-role
+        rules:
+        - apiGroups:
+          - '*'
+          resources:
+          - '*'
+          verbs:
+          - '*'
+      options:
+        provider: ${do_k8s_provider}
+
+    do_argocd_cluster_role_binding:
+      type: kubernetes:rbac.authorization.k8s.io/v1:ClusterRoleBinding
+      properties:
+        metadata:
+          name: argocd-manager-role-binding
+        roleRef:
+          apiGroup: rbac.authorization.k8s.io
+          kind: ClusterRole
+          name: argocd-manager-role
+        subjects:
+        - kind: ServiceAccount
+          name: argocd-manager
+          namespace: kube-system
+      options:
+        provider: ${do_k8s_provider}
+
+    kubeconfig:
+      type: kubernetes:core/v1:Secret
+      properties:
+        metadata:
+          name: "${clusterName}-do2"
+          namespace: argocd
+          labels:
+            argocd.argoproj.io/secret-type: cluster
+            clusterType: "doks"
+            env: "dev"
+            team: "developmenta"
+        stringData:
+          name: "${clusterName}"
+          server: "${do_cluster.endpoint}"
+          config:
+            fn::toJSON:
+              bearerToken:
+                fn::fromBase64: ${do_argocd_secret.data["token"]}
+              tlsClientConfig:
+                caData: ${do_argocd_secret.data["ca.crt"]}
+                insecure: false
+---
+apiVersion: pulumi.com/v1
+kind: Stack
+metadata:
+  name: my-doks-cluster
+spec:
+  stack: ediri/my-doks-cluster/dev
+  envRefs:
+    DIGITALOCEAN_TOKEN:
+      type: Env
+      env:
+        name: DIGITALOCEAN_TOKEN
+  programRef:
+    name: my-doks-cluster
+  destroyOnFinalize: false
