@@ -14,13 +14,13 @@ const eksNodeInstanceType = config.get("eksNodeInstanceType") || "t3.medium";
 const vpcNetworkCidr = config.get("vpcNetworkCidr") || "10.0.0.0/16";
 
 const publicSubnetCIDRs: pulumi.Input<string>[] = config.requireObject("publicSubnetCIDRs") || [
-    "10.0.0.0/27",
-    "10.0.0.32/27"
+    "10.0.0.0/20",
+    "10.0.0.32/20"
 ];
 
 const availabilityZones: pulumi.Input<string>[] = config.requireObject("availabilityZones") || [
     "eu-central-1a",
-    "eu-central-1b",
+    "eu-central-1b"
 ];
 
 // Create a new VPC
@@ -77,6 +77,7 @@ const cluster = new eks.Cluster("eks-cluster", {
     endpointPublicAccess: true,
     createOidcProvider: true,
     nodeRootVolumeSize: 150,
+    authenticationMode: "API",
 });
 
 const podIdentityAddon = new aws.eks.Addon("pod-identity", {
@@ -86,6 +87,21 @@ const podIdentityAddon = new aws.eks.Addon("pod-identity", {
     resolveConflictsOnCreate: "OVERWRITE",
     resolveConflictsOnUpdate: "OVERWRITE",
 });
+
+const accessEntry = new aws.eks.AccessEntry("accessEntry", {
+    clusterName: cluster.eksCluster.name,
+    principalArn: "arn:aws:iam::052848974346:role/aws-reserved/sso.amazonaws.com/us-west-2/AWSReservedSSO_AdministratorAccess_5b5d58a7c435da2d"
+});
+
+const accessEntryPolicyClusterAdmin = new aws.eks.AccessPolicyAssociation("accessEntryPolicyClusterAdmin", {
+    accessScope: {
+        type: "cluster"
+    },
+    clusterName: cluster.eksCluster.name,
+    principalArn: "arn:aws:iam::052848974346:role/aws-reserved/sso.amazonaws.com/us-west-2/AWSReservedSSO_AdministratorAccess_5b5d58a7c435da2d",
+    policyArn: "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+});
+
 
 const ecrRole = new aws.iam.Role("argocd-argocd-image-updater-role", {
     assumeRolePolicy: {
