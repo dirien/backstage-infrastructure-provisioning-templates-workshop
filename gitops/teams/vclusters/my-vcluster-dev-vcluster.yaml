@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: my-vcluster-dev-developmenta
+  namespace: argocd
+spec:
+  destination:
+    namespace: my-vcluster-dev
+    server: https://kubernetes.default.svc
+  project: developmenta
+  source:
+    repoURL: 'https://charts.loft.sh/'
+    targetRevision: 0.20.0-beta.12
+    chart: vcluster
+    helm:
+      values: |
+        controlPlane:
+          distro:
+            k8s:
+              enabled: true
+          statefulSet:
+            persistence:
+              volumeClaim:
+                enabled: false
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - ServerSideApply=true
+    - CreateNamespace=true
